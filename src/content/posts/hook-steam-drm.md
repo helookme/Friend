@@ -8,8 +8,9 @@ tags:
 draft: false
 lang: ""
 ---
-> [!ai] qwen/qwen3-vl-8b
-> 需完整Steam游戏包体，定位对应appmanifest文件获取AppId与LastOwner；下载并配置Wu-Yijun/steam_client_loader中Windows版Release，修改ColdClientLoader.ini填入Exe与AppId，编辑force_steamid.txt与DLC.txt匹配游戏信息；复制文件至游戏目录后运行steamclient_loader.exe即可无Steam启动游戏。
+> [!ai] gemini-3-flash-preview
+> 从acf文件获取AppId与LastOwner，配置steam_client_loader并移入游戏目录，运行主程序以实现脱离Steam启动。
+
 
 # 正式开始
 

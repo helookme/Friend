@@ -10,8 +10,9 @@ category: 教程
 draft: false
 lang: ""
 ---
-> [!ai] qwen/qwen3-vl-8b
-> 配置Giscus需创建公开仓库并启用Discussion，通过giscus.app绑定映射关系（推荐pathname），勾选严格标题匹配防评论串台，设置分类与主题后插入JS代码。配置Akismet需注册账户获取API Key，部署GitHub Action并设置Secret，测试垃圾评论拦截。封禁刷屏用户可手动操作GitHub用户封禁功能；防止小号刷评可设置仓库交互限制。
+> [!ai] gemini-3-flash-preview
+> 创建启用Discussion的公开仓库，在giscus.app中推荐选用pathname映射及严格标题匹配，将JS代码嵌入网页。反垃圾需注册Akismet并部署GitHub Action，配置API Key与GH_TOKEN。针对持续骚扰，可手动封禁用户或开启仓库临时交互限制以屏蔽新账号。
+
 
 
 # 配置Giscus

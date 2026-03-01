@@ -8,8 +8,9 @@ published: 2025-04-15
 tags: [Github, 反向代理, Cloudflare Worker, EdgeOne, Vercel]
 title: Github全站反向代理搭建指南
 ---
-> [!ai] qwen/qwen3-vl-8b
-> 搭建GitHub全站反向代理需结合透明代理与HTML覆写，解决外域依赖和钓鱼风险。核心是将github.com等域名映射至自定义子域名（如gh.abc.com），并重定向其资源请求至真实源站（如raw.githubusercontent.com）。需屏蔽登录页（如/login）防止被Cloudflare标记为钓鱼。部署方案从易到难：Vercel Function（一键部署）、Cloudflare Worker（免费+CDN）、EdgeOne Pages（国内加速）、VPS+Go（完全自控）。所有方案均需配置域名映射并绑定对应子域名。
+> [!ai] gemini-3-flash-preview
+> 搭建GitHub全站反向代理需通过透明代理与HTML覆写解决外域资源依赖，并屏蔽登录、注册等路径以规避钓鱼风险。核心逻辑是建立完整的域名映射体系，将请求转发至原站并动态重写返回内容中的链接。部署方案包括Vercel Function、Cloudflare Worker、EdgeOne Pages及VPS+Go，重点在于配置映射规则并绑定所有相关子域名，从而实现全站资源的顺畅访问与安全性合规。
+
 
 
 # 引言

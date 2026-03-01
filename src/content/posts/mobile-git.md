@@ -10,8 +10,9 @@ tags:
   - 博客
 title: 如何在安卓手机上优雅的写我的博客
 ---
-> [!ai] qwen/qwen3-vl-8b
-> 通过手机使用 PuppyGit 克隆 GitHub 仓库并结合 Obsidian 移动端，可实现离线编辑与同步，支持提交、拉取、推送操作，文章可通过复制现有内容修改元数据完成创建，本文即为手机实操成果。
+> [!ai] gemini-3-flash-preview
+> 使用PuppyGit及GitHub Token进行Git管理，配合Obsidian移动端编辑Markdown，通过复制文章副本实现手机端撰写与发布博客。
+
 
 # 正式开始
 为了让我出门在外也能通过我的手机来撰写我的博客文章，我研究了一下，发现是完全可以的

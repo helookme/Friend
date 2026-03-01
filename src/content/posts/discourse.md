@@ -8,8 +8,9 @@ category: '教程'
 draft: false 
 lang: ''
 ---
-> [!ai] qwen/qwen3-vl-8b
-> 安装 Docker 与 Docker Compose，创建 `docker-compose.yml` 并配置 PostgreSQL、Redis 和 Discourse 服务，替换所有占位符（如域名、邮箱、密码等），执行 `docker compose up -d` 启动容器。等待日志显示“Precompiling assets”完成预编译，随后访问指定域名或 IP:3000 即可使用 Discourse。若需 SMTP，使用支持 TLS 的邮箱服务如微信企业邮。
+> [!ai] gemini-3-flash-preview
+> 安装Docker和Docker-Compose，编写包含PostgreSQL、Redis、Discourse及Sidekiq服务的docker-compose.yml文件。配置中须修改域名、管理员信息及SMTP邮件设置（587端口/TLS）。执行docker compose up -d启动，监控日志待资源预编译完成即可通过域名访问。
+
 
 
 # 正式开始

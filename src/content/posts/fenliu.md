@@ -6,8 +6,9 @@ image: ../assets/images/fenliu.webp
 draft: false
 lang: ""
 ---
-> [!ai] qwen/qwen3-vl-8b
-> 需分流域名包括 blog.acofork.com、acofork.com、www.acofork.com，均应301重定向至主站。CDN SSL方案：EdgeOne直接申请，ESA用DCV委派，Cloudflare用HTTP验证并配置ACME验证排除规则。源站架构：静态资源国内用Page，海外用Cloudflare Worker；动态资源国内IPv6回源，海外用Cloudflare Tunnel。浏览器可通过JS读取Server头监控节点。注意事项：ESA Page资源限制大，CDN回源非标端口需规则，分流需国内DNS，出口IP决定节点，HTTP验证自动续证，Tunnel可自定义域名，国内节点需启海外封锁防DDoS。成果展示含三项目多地区测速图。
+> [!ai] gemini-3-flash-preview
+> 针对主站、统计及随机图等站点实施国内外流量分流。SSL申请采用EdgeOne直签、ESA DCV委派及Cloudflare HTTP验证（需排除重定向路径）。静态资源境内部署于CDN Page，境外部署于Cloudflare Worker；动态内容境内通过EdgeOne以IPv6回源，境外利用Cloudflare Tunnel。解析需由国内DNS服务商托管，默认指向Cloudflare，境内解析至国内节点。境内节点须配置海外封锁以防DDoS攻击。利用浏览器JS读取响应头Server字段实现访问节点监控。Cloudflare SaaS建议采用HTTP验证以实现SSL证书自动续期。
+
 
 # 需分流的网站
 博客本体，主站

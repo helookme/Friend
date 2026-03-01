@@ -8,8 +8,9 @@ category: '记录'
 draft: false 
 lang: ''
 ---
-> [!ai] qwen/qwen3-vl-8b
-> 上传图片至 xLog 图床 API，通过 POST 请求发送文件，无鉴权，使用 form-data 格式，文件不宜过大，成功返回 CID、IPFS URL 及可直接访问的 web2url，后者无 CORS 限制。
+> [!ai] gemini-3-flash-preview
+> xLog图床API地址为https://ipfs-relay.crossbell.io/upload，采用POST方式上传form-data（key为file），无需鉴权，返回的web2url无CORS限制。
+
 
 
 # 正式开始

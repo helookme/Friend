@@ -9,8 +9,9 @@ tags:
 draft: false
 lang: ""
 ---
-> [!ai] qwen/qwen3-vl-8b
-> 安装Git LFS并克隆IndexTTS仓库，执行`git lfs pull`下载大模型文件；用`uv`安装依赖与hf-cli，下载模型至`checkpoints`；运行`webui.py`启动服务，浏览器访问7860端口。界面支持上传音色参考音频与输入文本生成语音，推荐使用情感向量控制功能。
+> [!ai] gemini-3-flash-preview
+> 安装Git LFS克隆Index-TTS仓库，使用UV安装依赖并下载模型，运行webui.py。通过输入参考音频和文本生成语音，推荐使用情感向量控制。
+
 
 # 正式开始
 

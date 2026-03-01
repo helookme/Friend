@@ -8,8 +8,9 @@ category: '记录'
 draft: false 
 lang: ''
 ---
-> [!ai] qwen/qwen3-vl-8b
-> 主播获得EdgeOne免费版激活码，通过发推私信兑换；默认CNAME速度差，推荐使用中国香港IP或自定义域名如 `eo.072103.xyz`；更换CNAME后需手动申请SSL证书；重定向可结合Cloudflare规则与EO回源实现；反代问题多通过修改回源HOST头解决。
+> [!ai] gemini-3-flash-preview
+> 通过推特兑换EdgeOne免费版，建议优选香港优化IP替换默认CNAME，SSL需手动上传。重定向可利用规则引擎或回源Cloudflare实现，反代需将回源HOST头设为源站地址。
+
 
 
 # 引言

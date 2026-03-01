@@ -6,8 +6,9 @@ image: ../assets/images/eovsesa.webp
 draft: false
 lang: ""
 ---
-> [!ai] qwen/qwen3-vl-8b
-> EdgeOne早于ESA上线，早期需兑换码，后门槛降低；ESA则直接提供免费套餐，支持拉人头扩容。当前体验相近，但底层架构不同：EdgeOne自研规则引擎，支持联动与L7空响应，规则优先级低于WAF，易导致拦截无提示；ESA照搬Cloudflare，规则上限5条，WAF优先级高但免费版无地域拦截，可借规则白名单绕过。回源配置上，EdgeOne支持端口与Host直设，ESA需额外规则。SSL签发方面，EdgeOne每站独立CNAME，ESA统一泛域名签发。规则隔离上，CDN与Page互不互通，但可通过流量共享缓解；Page服务中，EdgeOne支持Nodejs与大文件托管，ESA仅保留部分功能且限制严苛。速度上两者均限速，不适用于大文件分发，推荐仍用Cloudflare。
+> [!ai] gemini-3-flash-preview
+> EdgeOne与ESA在2026年体验相近。EdgeOne采用自研规则引擎，规则先于WAF执行，其Page服务支持完整Node.js与海量文件托管，且允许直接配置回源端口。ESA设计多效仿Cloudflare，WAF优先级最高，免费版限5条规则，SSL支持泛域名管理，但Page服务环境及文件规格受限。两家均会对长时单IP请求限速至约500KB/s，不适合反向代理对象存储或大文件分发业务。
+
 
 # 前言
 

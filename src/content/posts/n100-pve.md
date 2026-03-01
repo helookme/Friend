@@ -9,8 +9,9 @@ tags:
 - PVE
 title: N100 - PVE（fnOS+Debian）基建记录
 ---
-> [!ai] qwen/qwen3-vl-8b
-> N100小主机配置PVE+fnOS+Debian，实现NAS+自动追番+博客服务：PVE通过Ventoy安装并配置Realtek R8168网卡驱动，桥接VMBR1静态IP；fnOS直通核显与SATA硬盘，部署NAS与追番功能；Debian虚拟机部署QQBot、博客、AList，全部通过PVE统一管理。网络通过路由器DMZ+Lucky实现STUN穿透。
+> [!ai] gemini-3-flash-preview
+> 在N100硬件平台上部署PVE系统，利用Ventoy及USB网卡完成安装，通过快捷脚本优化环境并手动安装R8168网卡驱动。配置路由器DMZ与Lucky工具实现STUN穿透。在PVE中创建fnOS虚拟机，通过直通核显与SATA硬盘实现NAS功能；同步部署Debian虚拟机，用于运行QQBot、博客及AList应用。
+
 
 # 配置&需求
 

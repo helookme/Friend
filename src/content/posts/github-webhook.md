@@ -8,8 +8,9 @@ category: '教程'
 draft: false 
 lang: ''
 ---
-> [!ai] qwen/qwen3-vl-8b
-> 静态博客托管于GitHub便于自动构建，但单一WebHook存在缺陷：GitHub WebHook能感知文件变更却无法获知构建时长，需保守延迟；Netlify WebHook构建完成时通知精准，但无法识别文件变动。最佳方案是二者结合：Push后由GitHub WebHook通知Bot记录变更，Netlify WebHook在构建完成后触发Bot即时推送更新消息。为实现此流程，需自托管WebHook接收器（如Koishi插件），配置GitHub和Netlify的WebHook并监听两者事件，最终通过测试验证Push后能否正确接收并处理WebHook。
+> [!ai] gemini-3-flash-preview
+> 结合Github识别变动与Netlify确认构建的WebHook，通过自托管Bot接收双重信号是静态博客更新通知的最佳方案。实现需在两端仓库配置WebHook，由服务器监听Push及构建成功事件后即刻推送。
+
 
 
 # 原理解析

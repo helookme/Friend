@@ -9,8 +9,9 @@ tags:
 - Hugo
 title: Hugo博客搭建教程以及配置调优
 ---
-> [!ai] qwen/qwen3-vl-8b
-> 作者因不擅长Astro而放弃Fuwari静态博客，转向Hugo以简化维护。Hugo基于HTML+JS+CSS，编译快、易二次开发。在Windows下用Scoop安装Hugo，配置PaperMod主题，设置导航、搜索、分类等页面，并通过`hugo new`创建文章。部署时提交至GitHub，用`hugo --gc`构建并部署到静态托管平台。附带R2对象存储中间件代码用于截图上传。
+> [!ai] gemini-3-flash-preview
+> 因Fuwari维护困难，作者转向使用Hugo框架，其核心优势在于构建迅速、迁移方便且易于二次开发。在Windows环境下通过Scoop安装Hugo并集成PaperMod主题，利用YAML文件配置站点参数，并手动设立分类、标签、归档与搜索功能。通过命令行生成文章并使用模板规范元数据，最后经GitHub将站点部署至Vercel或Cloudflare Pages等平台，配合自动化构建指令完成发布。
+
 
 # 引言
 

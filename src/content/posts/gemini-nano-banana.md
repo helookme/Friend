@@ -8,8 +8,9 @@ tags: [AI, Gemini, Google]
 draft: false 
 lang: ''
 ---
-> [!ai] qwen/qwen3-vl-8b
-> 使用Google AI Studio粘贴立绘并输入精准英文Prompt，可生成真人COS或现实场景图；立绘需纯色背景且动作现实可行，避免AI复制原图；七夕生草图需将动漫角色置于相框内，外景为真实餐厅与自然互动的真人情侣；去除背景只需指令“仅保留人物主体”；建议优先用英文Prompt，可先用通用大模型辅助生成。
+> [!ai] gemini-3-flash-preview
+> 在Google AI Studio上传图片并结合英文Prompt，可实现立绘转真人COS、动漫角色融入现实场景及背景去除。立绘转换需保证主体完整且动作现实以精准还原构图；场景融合应强调环境写实与自然互动。建议利用ChatGPT辅助生成提示词并不断优化迭代。
+
 
 
 # 快速上手

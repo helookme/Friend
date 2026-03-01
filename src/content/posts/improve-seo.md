@@ -8,8 +8,9 @@ category: '记录'
 draft: false 
 lang: ''
 ---
-> [!ai] qwen/qwen3-vl-8b
-> 标题需自创英文单词，避免重名与知名事物关联，跨页锚定主标题；description需精炼明确，涵盖核心内容与作者；关键词现代引擎忽略，无需填写；同内容网站仅保留一域名，其余301重定向，避免SEO破坏；勿用同名云服务，防私钥丢失与SEO污染；用Lighthouse无痕模式检测并优化性能；接入必应、百度、谷歌等平台获取反馈与流量数据；主动提交sitemap加速收录；启用IndexNow（如Cloudflare）主动推送内容，提升收录效率。
+> [!ai] gemini-3-flash-preview
+> 网站SEO优化需确保标题唯一并避开知名事物，建议自创英文名并跨页面锚定主标题。Description应言简意赅，无需设置关键词。同内容网站须通过301重定向统一域名，避免重复命名云托管服务。利用Lighthouse分析站点性能，接入Bing、Google等站长工具与分析系统。主动提交站点地图，并利用IndexNow或Cloudflare Crawler Hints实现内容主动推送以加速收录。
+
 
 
 # 标题

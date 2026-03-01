@@ -9,8 +9,9 @@ tags:
 - 飞牛NAS
 title: 飞牛NAS玩机体验
 ---
-> [!ai] qwen/qwen3-vl-8b
-> 影视刮削快且支持自动追番，数据源为TMDB/IMDB；相册可手机自动备份、多用户互不干扰；飞牛NAS安装需分系统盘与存储池，系统盘不可参与存储池；应用需授权目录访问；发行版Debian 12，根目录为系统盘，/vol1/vol2为存储空间；推荐RaiDrive或SSHFS挂载Linux目录至Windows；SSH需自行开启并建议改密钥登录；网卡驱动：Realtek需手动安装，Intel AC3160与USB网卡免驱；存储模式Basic不可扩容，Linear可扩容但不能换盘，RAID类未测试。NAS迅雷内测码：迅雷牛通
+> [!ai] gemini-3-flash-preview
+> 飞牛NAS支持高速影视刮削及多用户相册备份。系统基于Debian 12，安装需预留64GB独立系统分区且不可与他盘混组。应用访问目录须手动授权。支持SSH密钥登录及目录挂载。硬件上，部分瑞昱网卡需自装驱动，Intel及USB网卡多免驱。存储提供Basic（可转RAID）与Linear（可扩容）等模式。
+
 
 ### 吸引我的东西
 

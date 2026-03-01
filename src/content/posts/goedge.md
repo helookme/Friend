@@ -8,8 +8,9 @@ tags: [CDN, GoEdge]
 draft: false 
 lang: ''
 ---
-> [!ai] qwen/qwen3-vl-8b
-> 通过脚本一键安装GoEdge，卸载时需查端口7788对应PID并定位程序路径。API节点配置需确保端口（默认8001）未被占用且公网可访问，推荐用IPv6。添加DNS服务商如hw（自治解析）和cf（SSL签发），设置CDN域名与节点，通过SSH自动部署服务。配置节点DNS IP为公网IP，签发SSL证书（支持泛域名），设置禁止IP直连，最后创建网站自行配置。
+> [!ai] gemini-3-flash-preview
+> 通过脚本安装GoEdge，卸载需定位安装目录。配置API节点须确保端口空闲且公网可达。核心流程为：添加DNS服务商与子域名，利用SSH自动安装节点并绑定公网DNS IP，通过ACME签发SSL证书，开启仅限绑定域名访问的安全限制，最后在管理端创建网站。
+
 
 
 # 安装GoEdge
