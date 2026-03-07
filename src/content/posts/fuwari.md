@@ -1,6 +1,6 @@
 ---
 category: 教程
-description: Fuwari是一个静态博客框架，Cloudflare Pages是一个托管静态网站的服务，将他俩结合即可得到一个快速安全无需托管的高效博客
+description: Fuwari 是一个静态博客框架，配合 Cloudflare Pages 可以快速搭建一个轻量、安全且易维护的个人博客
 draft: false
 image: ../assets/images/f286ef4d-326c-4c7c-8a1e-ed150937a12b.webp
 lang: ""
@@ -8,6 +8,7 @@ published: 2025-09-17
 tags:
   - Fuwari
 title: Fuwari静态博客搭建教程
+ai_level: 2
 ---
 > [!ai] gemini-3-flash-preview
 > 搭建Fuwari博客需准备Git、Node.js、GitHub与Cloudflare账号，并利用Markdown编辑器编写内容。整体流程为本地部署编写后推送至GitHub仓库，由Cloudflare Pages执行自动构建。具体步骤包含Fork并克隆项目仓库、使用pnpm安装依赖，以及通过编辑src/config.ts文件自定义站点标题、主题、用户信息与导航栏等核心配置。
@@ -16,43 +17,43 @@ title: Fuwari静态博客搭建教程
 
 ### 你需要准备的东西
 
-1. 一个牛逼的脑子，支持并行运算至少两个单位以上的事件。遇到问题先思考，想不通就搜索，搜索不到就去和AI调情，不要上来就问问问
+1. 一点基础的折腾能力。遇到问题先自己排查，实在解决不了再搜索或借助 AI，这样搭建过程会顺利很多。
 
-2. [Git - Downloads (git-scm.com)](https://git-scm.com/downloads)：最牛逼的版本控制器，这里用于对Github进行操作，当然，你也可以尝试使用[GitHub Desktop | Simple collaboration from your desktop](https://github.com/apps/desktop) ~~但就我而言，这玩意更难用~~ 在现在SSH克隆默认被阻断的情况下，它变得好用起来了
+2. [Git - Downloads (git-scm.com)](https://git-scm.com/downloads)：用于管理本地代码并与 GitHub 仓库同步。如果你更习惯图形界面，也可以尝试 [GitHub Desktop | Simple collaboration from your desktop](https://github.com/apps/desktop)。
 
-3. [Node.js — Run JavaScript Everywhere (nodejs.org)](https://nodejs.org/en)：Fuwari基于Node.js，你需要安装这个来搭建博客
+3. [Node.js — Run JavaScript Everywhere (nodejs.org)](https://nodejs.org/en)：Fuwari 基于 Node.js，因此需要先安装它。
 
-4. 一个[Github](https://github.com)账号：用于创建一个代码仓库存放Fuwari文件
+4. 一个 [GitHub](https://github.com) 账号：用于创建仓库并托管 Fuwari 项目文件。
 
-5. 一个[Cloudflare](https://cloudflare.com)账号：用于创建一个Pages并且绑定域名支持访问
+5. 一个 [Cloudflare](https://cloudflare.com) 账号：用于创建 Pages 项目并绑定域名。
 
-6.  [黑曜石（Obsidian）](/posts/obsidian/)：这是一个可视化MarkDown编辑器，因为Fuwari的每一篇文章/页面都是MarkDown，所以需要一个好用的编辑器
+6. [黑曜石（Obsidian）](/posts/obsidian/)：这是一个可视化 Markdown 编辑器。由于 Fuwari 的文章和页面都以 Markdown 文件保存，准备一个顺手的编辑器会方便很多。
 
-7. 你得会用MarkDown语法来编写文章，如果你不会可以参见：[Markdown 基本语法 | Markdown 官方教程](https://markdown.com.cn/basic-syntax/)
+7. 需要会一些基础的 Markdown 语法。如果暂时不熟悉，可以先看这个教程：[Markdown 基本语法 | Markdown 官方教程](https://markdown.com.cn/basic-syntax/)。
 
 ### 流程图
 
 本地部署Fuwari，编写文章 -> 推送更改到远程Github仓库 -> Cloudflare Pages检测到仓库更新自动构建新的网站静态文件 -> 网站成功更改
 
-### 让我们开搞吧！
+### 让我们开始吧
 
-#### 首先，我们来本地部署Fuwari
+#### 首先，在本地部署 Fuwari
 
 1. Fork仓库：
    
    [https://github.com/saicaca/fuwari](https://github.com/saicaca/fuwari)
 
-2. 避免有小废物不会Fork仓库，这里附上图片教程
+2. 如果你不熟悉 Fork 仓库的流程，可以参考下面的图片教程。
 
 3. ![](../assets/images/2024-10-14-12-15-44-image.webp)![](../assets/images/2024-10-14-12-17-03-image.webp)
 
-4. 然后将仓库克隆到本地：`git clone <你的仓库URL>`（推荐使用SSH，可以不用魔法来推送更改）
+4. 然后将仓库克隆到本地：`git clone <你的仓库URL>`。如果可以使用 SSH，后续推送通常会更方便。
 
-5. 首先，全局安装pnpm：`npm install -g pnpm`（如果npm国内拉取过慢，请尝试cnpm：[npmmirror 镜像站](https://npmmirror.com/)）
+5. 先全局安装 `pnpm`：`npm install -g pnpm`。如果 npm 在国内下载较慢，可以尝试切换镜像源，例如 [npmmirror 镜像站](https://npmmirror.com/)。
 
-6. 然后在项目根目录安装依赖：`pnpm install`  和 `pnpm add sharp`
+6. 接着在项目根目录安装依赖：`pnpm install` 和 `pnpm add sharp`。
 
-7. 至此，你成功在本地部署了Fuwari
+7. 完成以上步骤后，Fuwari 就已经成功部署到本地了。
 
 > [!TIP]
 > 
@@ -60,17 +61,17 @@ title: Fuwari静态博客搭建教程
 
 #### 改写Fuwari的基本信息并且清理多余文件
 
-> 刚创建的Fuwari可能带有一些示例的博主名，ICON，URL，介绍和示例文章，为了让用户知道这是你的博客，我们需要一一改写
+> 刚创建的 Fuwari 可能带有默认的博主名称、图标、链接、简介和示例文章。为了让站点更符合你的使用场景，建议先把这些内容改成自己的信息。
 
-1. 在根目录下的 `src` 文件夹中，你可以找到 `config.ts` 我们来开始改写
+1. 在根目录的 `src` 文件夹中找到 `config.ts`，这里是站点的核心配置文件。
    
    - title：你的博客主标题
    
    - subtitle：你的博客副标题。可选，在首页会显示为“主标题 - 副标题”
    
-   - lang：博客显示语言。注释已经列出了一些常用的值，如：en, zh_CN, zh_TW, ja, ko
+  - lang：博客显示语言。注释里已经列出了一些常见值，例如 `en`、`zh_CN`、`zh_TW`、`ja`、`ko`
    
-   - themeColor：hue值则是你的博客主题色，可以在你的博客右上角的画板图标确定喜欢的颜色再填写![](../assets/images/2024-10-15-09-16-30-image.webp)
+  - themeColor：`hue` 表示博客主题色。你可以先在博客右上角的调色板里挑选喜欢的颜色，再把数值写回配置中。![](../assets/images/2024-10-15-09-16-30-image.webp)
    
    - banner：src：即banner图片，支持http/https URL
    
@@ -78,15 +79,15 @@ title: Fuwari静态博客搭建教程
    
    - links：即友情链接，这些链接在导航栏上
    
-   - avatar：即你的头像
+  - avatar：你的头像
    
-   - name：即你的名字
+  - name：你的名字
    
-   - bio：即个性签名，会显示在头像和名字下面
+  - bio：个性签名，会显示在头像和名字下方
    
-   - `NavBarConfig` 为导航栏设置的超链接。`ProfileConfig` 为你的用户的超链接，分别如图![](../assets/images/2024-10-15-17-49-30-image.webp)
+  - `NavBarConfig` 用于配置导航栏链接，`ProfileConfig` 用于配置个人资料区域的链接，效果如下图所示。![](../assets/images/2024-10-15-17-49-30-image.webp)
    
-   - icon：你需要前往[icones.js](https://icones.js.org/)去搜索你想要的图标，比如QQ，则填写 `fa6-brands:qq` ，如图。Fuwari默认支持这几种类型：`fa6-brands`, `fa6-regular`, `fa6-solid`, `material-symbols`。可以在 `astro.config.mjs` 中搜索关键字进行配置
+  - icon：你可以前往 [icones.js](https://icones.js.org/) 搜索想要的图标。例如 QQ 可以填写 `fa6-brands:qq`。Fuwari 默认支持 `fa6-brands`、`fa6-regular`、`fa6-solid`、`material-symbols` 等类型，必要时也可以在 `astro.config.mjs` 中继续扩展。
    
    - ![](../assets/images/1ef05530-10fd-4301-af4e-21ddadf18605.webp)
    
@@ -190,9 +191,9 @@ title: Fuwari静态博客搭建教程
      }
      ```
 
-2. 清理多余文件。在根目录下的 `src/content/posts` 文件夹中会有一些示例文章，这些文章介绍了一些MarkDown语法和技巧，可以让你更快上手Fuwari和fuwari，我们可以将其保存到别处
+2. 清理多余文件。根目录下的 `src/content/posts` 文件夹里会带有一些示例文章，这些内容主要用于演示 Markdown 语法和 Fuwari 的基本用法。你可以先备份到别处，再按需删除。
 
-3. 至此，你已经可以开始撰写文章了
+3. 完成这些设置后，就可以开始撰写自己的文章了。
 
 #### 让我们开始写作！
 >推荐使用 [黑曜石（Obsidian）](/posts/obsidian/)
@@ -201,7 +202,7 @@ title: Fuwari静态博客搭建教程
 
 2. 然后，在根目录下的 `src/content/posts` 文件夹中会多出一个 `xxx.md`文件
 
-3. 我们使用MarkText打开这个文件，你可以看到一些基本信息，我们只需要关注几个重要的信息
+3. 用 MarkText 打开这个文件后，你会看到一组基础元数据，其中有几项最需要关注。
 
 4. ```markdown
    title: xxx
@@ -226,37 +227,37 @@ title: Fuwari静态博客搭建教程
    
    - categories：文章分类
 
-5. 我们还需要更改根目录下的 `astro.config.mjs` 。在第34行更改 `stie:` 为你的站点URL，如： `site: "https://onani.cn",`
+5. 还需要修改根目录下的 `astro.config.mjs`，把其中的 `site:` 改成你自己的站点 URL，例如：`site: "https://onani.cn",`。
 
-6. 欸？有的人就会问了，MarkDown固然好，但是我要如何处理图片的置入呢
+6. 如果你想在 Markdown 文章里方便地插入图片，也可以顺手把编辑器配置好。
 
-7. 这也很简单，多亏了MarkText这款软件，我们也可以像编辑Typecho一样直接使用Ctrl+CV来在MarkDown语法中置入图片，但是我们需要一些小设置：
+7. 这并不复杂。借助 MarkText，可以像使用传统博客编辑器一样直接复制粘贴图片，不过需要先做一点简单配置：
    
-   - 依次点击：MarkText软件的左上角的三条杠 -> File -> Perferences -> 左侧的Image分类 -> 如图设置 -> 注意更改第一个选项为Copy开头的选项，将Perfer开关打开，然后上下两个文本框一个填写绝对路径一个填写相对路径
+  - 依次点击 MarkText 左上角菜单 -> `File` -> `Preferences` -> 左侧 `Image` 分类，然后按照下图进行设置。注意把第一个选项改成以 `Copy` 开头的模式，开启 `Prefer` 开关，并在上下两个文本框中分别填写绝对路径和相对路径。
    
    - ![](../assets/images/2024-10-14-12-54-21-image.webp)
    
-   - 这样，当置入图片时，会往 `https://eo-r2.2x.nz/myblog/img` 文件夹复制一份，然后通过`![1](https://eo-r2.2x.nz/myblog/img/1.webp)`写入MarkDown文件。这样网站就能成功读取到图片啦。而你只需要Ctrl+CV，其他操作MarkText都会自动处理
+  - 这样一来，插入图片时就会先把图片复制到 `https://eo-r2.2x.nz/myblog/img` 对应的位置，再自动以 `![1](https://eo-r2.2x.nz/myblog/img/1.webp)` 这样的格式写入 Markdown 文件。你只需要复制粘贴，剩下的步骤 MarkText 会自动完成。
 
-8. 至此，你已经会用MarkText编写MarkDown语法的博文了
+8. 配置完成后，你就可以比较高效地用 MarkText 编写 Markdown 博文了。
 
 #### 本地预览，然后发布到Github
 
-1. 当你认为你的文章已经写得差不多时，想要看看效果？请到项目根目录执行：`pnpm dev`，稍等片刻，你就可以本地预览你的博客啦![](../assets/images/2024-10-14-13-03-44-image.webp)
+1. 当你觉得文章写得差不多时，可以在项目根目录执行：`pnpm dev`。稍等片刻后，就能在本地预览博客效果。![](../assets/images/2024-10-14-13-03-44-image.webp)
 
-2. 好！接下来我们需要使用Git将我们所做的更改发布到Github
+2. 接下来就可以使用 Git 把这些改动发布到 GitHub。
    
-   - 首先，你需要让Git知道你是谁：`git config --global user.name "你的Github用户名"`和`git config --global user.email "你的Github邮箱@example.com"`
+  - 首先，让 Git 知道你是谁：`git config --global user.name "你的GitHub用户名"` 和 `git config --global user.email "你的GitHub邮箱@example.com"`
    
-   - 然后，更改远程仓库为ssh*（如果是通过ssh克隆的不用改）：`git remote set-url origin git@github.com:xxx/xxx`
+  - 然后，将远程仓库地址改成 SSH 形式（如果你本来就是通过 SSH 克隆的，就不需要再修改）：`git remote set-url origin git@github.com:xxx/xxx`
    
-   - 随后，让我们提交所有文件：`git add .`
+  - 随后，提交所有变更：`git add .`
    
-   - 之后，让我们发布一个本地提交：`git commit -m "项目初始化"`
+  - 接着，创建一次本地提交：`git commit -m "项目初始化"`
    
-   - 最后，让我们将本地更改提交到远程仓库：`git push`
+  - 最后，把本地更改推送到远程仓库：`git push`
 
-3. 此时，你的Github仓库应该已经有了新的提交![](../assets/images/2024-10-14-13-10-12-image.webp)
+3. 完成后，你的 GitHub 仓库里就应该能看到新的提交记录了。![](../assets/images/2024-10-14-13-10-12-image.webp)
 
 #### 让Cloudflare连接上Github，使用Pages服务展示你的博客（FREE！）
 

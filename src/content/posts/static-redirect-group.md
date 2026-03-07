@@ -1,35 +1,36 @@
 ---
 title: 完全免费！搭建一个自己的短链服务！
 published: 2026-01-14T23:39:31
-description: 利用Cloudflare Worker+Github搭建一个纯静态，刷不死的短链吧！
+description: 利用 Cloudflare Worker 和 GitHub，可以搭建一个纯静态、可自动维护的短链服务
 image: ../assets/images/static-redirect-group.webp
 draft: false
 lang: ""
+ai_level: 2
 ---
 > [!ai] gemini-3-flash-preview
 > Static_Redirect_Group是基于Cloudflare Worker与GitHub的短链系统，通过404 fallback机制配合JavaScript实现重定向，突破了静态规则数量限制。系统整合前后端逻辑，利用GitHub Action自动清理过期链接。部署需Fork仓库、修改HTML配置并配置GITHUB_TOKEN等环境变量。用户通过/_url页面创建短链，并建议设置WAF交互式质询以防护接口。
 
 
 # 前言
-本来不应该有这篇文章的，因为这篇文章就是一个该项目的简单自部署教程，应该写到仓库的README中，本来应该是让AI代工的，但是我发现它非常执着于那个b Github Page+Cloudflare Worker的神奇前后端分离，而且徒增了不少工作。其实该项目仅需一个Cloudflare Worker就行了，所以既然都要我手写了，我氵篇文章也是合情合理的吧
+原本这篇内容更适合写进仓库的 `README`，因为它本质上就是一个简洁的自部署教程。不过在实际整理时，我发现如果强行拆成 GitHub Pages + Cloudflare Worker 的前后端分离方案，反而会增加不少额外工作。实际上，这个项目只需要一个 Cloudflare Worker 就能跑起来，所以干脆单独写成一篇文章，方便说明整体思路。
 
 # 项目原理
-该项目和上一个短链项目差不多，但是更简化了一些东西
+这个项目和上一篇短链项目的思路比较接近，不过整体做得更精简一些。
 
-首先就是，这个项目我们将前后端揉在了一起，前端几乎不校验东西，所有校验在后端，也不用两个项目来回加规则了
+首先，这个项目把前后端逻辑合并到了同一套体系里。前端基本不做复杂校验，主要校验工作都放在后端处理，这样就不用在两个项目之间来回维护规则。
 
-由于该项目前端非常简单，就两个html（一个创建页面，一个重定向页面），所以将他们揉在一起也并不臃肿
+由于前端部分非常简单，只有两个 HTML 页面（一个用于创建短链，一个用于跳转），因此合并后也不会显得臃肿。
 
-再来，该项目不再使用Cloudflare服务端的 301/302 重定向，也就突破了2000个静态重定向的限制，理论上是无限，而是直接使用CDN对于静态资产命中404时会fullback到 404.html 再在该文件用 JavaScript 做短链查询和重定向（也就跟Nginx伪静态差不多）
+另外，这个项目不再依赖 Cloudflare 服务端提供的 301/302 重定向规则，因此也绕开了 2000 条静态重定向的数量限制。它的做法是：当 CDN 请求静态资源命中 404 时，回退到 `404.html`，再由其中的 JavaScript 负责查询短链规则并执行跳转，思路上有些类似 Nginx 的伪静态。
 
-再接着，如果一个pathname没命中任何规则，也会被catch到一个默认的回退源，可以兼容类似 https://2x.nz/posts/pin/ --> https://blog.acofork.com/posts/pin/ 
+如果某个 `pathname` 没有命中任何规则，也会统一落到默认回退源，这样就能兼容类似 `https://2x.nz/posts/pin/ --> https://blog.acofork.com/posts/pin/` 这样的场景。
 
-然后就是创建短链的逻辑，其实跟上一个项目差不多，就是Worker代理访问Github，改一下js，添加一条新的短链规则，然后推送，这会自动触发Cloudflare Worker的重新构建，稍等片刻后，访问新的 pathname 就可以得到正确的重定向了
+创建短链的逻辑和上一个项目也比较相似：由 Worker 代理访问 GitHub，修改对应的 JS 文件并新增一条短链规则，然后推送到仓库。提交完成后会自动触发 Cloudflare Worker 的重新构建，稍等片刻后，新路径就能正常跳转。
 
-最后就是我们支持了有效期，原理也非常简单，前端创建短链的时候给后端传一个什么时候过期的字段，后端再写入文件，最后借助 Github Action 的定时巡查清除过期短链
+最后，这个项目还支持有效期。实现方式也很直接：前端在创建短链时把过期时间一并传给后端，后端将其写入规则文件，再借助 GitHub Action 定时巡检并清理过期短链。
 
 # 在哪搞个短链
-我的 2x.nz 是在 https://porkbun.com 买的，一年一百左右。其他后缀也不错，如 `.im` `.mk`
+我的 `2x.nz` 是在 https://porkbun.com 购买的，价格大概是一年一百元左右。其他后缀也可以考虑，比如 `.im`、`.mk`。
 
 # 正式搭建你的短链服务
 
@@ -37,11 +38,11 @@ lang: ""
 
 ::github{repo="afoim/Static_Redirect_Group"}
 
-接下来，先更改一些硬编码的东西，由于Cloudflare Worker对于静态资产不能使用环境变量，所以有些东西是硬编码的，请在所有HTML文件中尝试搜索 `afoim` 进行更改，改成你的（你也可以多加一层，写一个配置，然后通过构建来注入内容，随你）
+接下来，先修改一些硬编码内容。由于 Cloudflare Worker 在处理静态资源时不能直接使用环境变量，因此部分信息是直接写在 HTML 里的。你可以在所有 HTML 文件中搜索 `afoim` 并替换成自己的内容；如果你愿意，也可以额外增加一层配置，并在构建阶段注入这些值。
 
-然后，请编辑js文件夹里面的短链，改为你想要的
+然后，请修改 `js` 文件夹中的短链规则，替换成你自己的配置。
 
-再接着，创建一个Github Token，只需要有 `repo` 权限即可
+再接着，创建一个 GitHub Token，只需要授予 `repo` 权限即可。
 
 继续，绑定机密环境变量，使用 `wrangler secret put XXX`
 
@@ -52,10 +53,10 @@ lang: ""
 | `GITHUB_REPO` | `Static_Redirect_Group` | 你的仓库名 |
 | `BASE_DOMAIN` | `你的短链域名` | 例如 `u.2x.nz` 或 Worker 的默认域名 `xxx.workers.dev` |
 
-此时，访问 `/_url` 即可创建你的短链
+完成这些配置后，访问 `/_url` 就可以开始创建短链了。
 
 # 防护
-建议保护创建短链的短链，防刷（或Cloudflare Turnstile、速率限制... 随你）
+建议重点保护创建短链的入口，避免被滥刷。你可以使用 Cloudflare Turnstile、速率限制或其他方式进行防护。
 
 在Cloudflare创建一个WAF规则
 
