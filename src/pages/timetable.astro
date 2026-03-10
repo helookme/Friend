@@ -1,4 +1,6 @@
 ---
+import fs from "node:fs";
+import path from "node:path";
 import type { TimetableViewModel } from "@/types/timetable";
 import PageCardHeader from "@components/misc/PageCardHeader.astro";
 import TimetablePageContent from "@components/timetable/TimetablePageContent.astro";
@@ -7,15 +9,18 @@ import {
 	buildTimetableViewModel,
 	resolveCurrentWeek,
 } from "@utils/timetable-normalizer";
-import { parseTimetableFile } from "@utils/timetable-parser";
+import { parseTimetableFile } from "@utils/timetable-parser-server";
 
 const filePath = "src/data/timetable/大一下.json";
+const absoluteFilePath = path.join(process.cwd(), filePath);
 
 let viewModel: TimetableViewModel | null = null;
 let loadError = "";
 let isCurrentWeek = false;
+let baselineText = "";
 
 try {
+	baselineText = fs.readFileSync(absoluteFilePath, "utf-8");
 	const parsedData = parseTimetableFile(filePath);
 	const currentWeek = resolveCurrentWeek(
 		parsedData.meta.startDate,
@@ -50,7 +55,11 @@ const breadcrumbSchema = {
 <MainGridLayout title={viewModel ? `课表 - 第${viewModel.currentWeek}周` : "课表"}>
 	<script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)}></script>
 	{viewModel ? (
-		<TimetablePageContent viewModel={viewModel} isCurrentWeek={isCurrentWeek} />
+		<TimetablePageContent
+			viewModel={viewModel}
+			isCurrentWeek={isCurrentWeek}
+			baselineText={baselineText}
+		/>
 	) : (
 		<div class="card-base p-6 md:p-8">
 			<PageCardHeader title="课程表" icon="material-symbols:calendar-month" pathname="/timetable/" />

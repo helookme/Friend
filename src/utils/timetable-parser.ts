@@ -1,5 +1,3 @@
-import fs from "node:fs";
-import path from "node:path";
 import type {
 	ParsedTimetableData,
 	TimetableConfigSegment,
@@ -47,9 +45,9 @@ export function parseTimetableText(rawText: string): ParsedTimetableData {
 		.map((line) => line.trim())
 		.filter((line) => line.length > 0);
 
-	if (lines.length < EXPECTED_SEGMENT_COUNT) {
+	if (lines.length !== EXPECTED_SEGMENT_COUNT) {
 		throw new Error(
-			`课表数据结构错误：至少需要 ${EXPECTED_SEGMENT_COUNT} 段 JSON，当前仅 ${lines.length} 段`,
+			`课表数据结构错误：必须恰好包含 ${EXPECTED_SEGMENT_COUNT} 段 JSON，当前为 ${lines.length} 段`,
 		);
 	}
 
@@ -73,10 +71,16 @@ export function parseTimetableText(rawText: string): ParsedTimetableData {
 	};
 }
 
-export function parseTimetableFile(filePath: string): ParsedTimetableData {
-	const absolutePath = path.isAbsolute(filePath)
-		? filePath
-		: path.join(process.cwd(), filePath);
-	const rawText = fs.readFileSync(absolutePath, "utf-8");
-	return parseTimetableText(rawText);
+export function serializeTimetableDataToFileText(
+	data: ParsedTimetableData,
+): string {
+	const segments = [
+		data.config,
+		data.nodeTimes,
+		data.meta,
+		data.courseDefinitions,
+		data.arrangements,
+	];
+	return `${segments.map((segment) => JSON.stringify(segment)).join("\n")}\n`;
 }
+

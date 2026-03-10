@@ -13,12 +13,12 @@ const borderColor = course.color || "#6b7280";
 
 <article class:list={["course-card card-interactive rounded-lg", compact ? "p-2.5" : "p-3"]} style={`--course-color: ${borderColor}`}>
 	<div class="flex items-start justify-between gap-2">
-		<h3 class:list={["font-semibold text-90 leading-tight", compact ? "text-xs" : "text-sm"]}>{course.courseName}</h3>
-		<span class="text-[10px] text-50 whitespace-nowrap">{course.startWeek}-{course.endWeek}周</span>
+		<h3 class:list={["font-semibold text-white leading-tight", compact ? "text-xs" : "text-sm"]}>{course.courseName}</h3>
+		<span class="text-[10px] text-white/80 whitespace-nowrap">{course.startWeek}-{course.endWeek}周</span>
 	</div>
-	{showTime && <p class:list={["text-50 mt-1", compact ? "text-[11px]" : "text-xs"]}>时间：{course.timeText}</p>}
-	<p class:list={["text-50", showTime ? "mt-0.5" : "mt-1", compact ? "text-[11px]" : "text-xs"]}>教室：{course.room}</p>
-	<p class:list={["text-50 mt-0.5", compact ? "text-[11px]" : "text-xs"]}>教师：{course.teacher}</p>
+	{showTime && <p class:list={["text-white/80 mt-1", compact ? "text-[11px]" : "text-xs"]}>时间：{course.timeText}</p>}
+	<p class:list={["text-white/80", showTime ? "mt-0.5" : "mt-1", compact ? "text-[11px]" : "text-xs"]}>教室：{course.room}</p>
+	<p class:list={["text-white/80 mt-0.5", compact ? "text-[11px]" : "text-xs"]}>教师：{course.teacher}</p>
 </article>
 
 <style>

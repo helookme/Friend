@@ -35,9 +35,9 @@ for (const day of dayIndexes) {
 	<div class="timetable-scale-viewport" data-timetable-scale-viewport>
 		<div class="timetable-scroll-content timetable-scale-content" data-timetable-scale-content>
 			<div class="timetable-header-grid border-b border-white/10">
-			<div class="px-3 py-2 text-xs text-50 border-r border-white/10">节次</div>
+			<div class="px-3 py-2 text-xs text-white border-r border-white/10">节次</div>
 			{viewModel.dayColumns.map((day) => (
-				<div class="px-3 py-2 text-sm font-semibold text-90 border-r last:border-r-0 border-white/10">{day.label}</div>
+				<div class="px-3 py-2 text-sm font-semibold text-white border-r last:border-r-0 border-white/10">{day.label}</div>
 			))}
 		</div>
 
@@ -46,8 +46,8 @@ for (const day of dayIndexes) {
 			.map((row) => (
 				<div class="timetable-row-grid border-b last:border-b-0 border-white/10">
 					<div class="px-3 py-3 border-r border-white/10">
-						<p class="text-xs text-90 font-medium">第 {row.node}-{Math.min(row.node + 1, viewModel.nodeRows.length)} 节</p>
-						<p class="text-[11px] text-50 mt-1">{row.startTime} - {viewModel.nodeRows.find((item) => item.node === Math.min(row.node + 1, viewModel.nodeRows.length))?.endTime ?? row.endTime}</p>
+						<p class="text-xs text-white font-medium">第 {row.node}-{Math.min(row.node + 1, viewModel.nodeRows.length)} 节</p>
+						<p class="text-[11px] text-white/80 mt-1">{row.startTime} - {viewModel.nodeRows.find((item) => item.node === Math.min(row.node + 1, viewModel.nodeRows.length))?.endTime ?? row.endTime}</p>
 					</div>
 					{viewModel.dayColumns.map((day) => {
 						const key = `${day.day}-${row.node}`;
@@ -61,7 +61,7 @@ for (const day of dayIndexes) {
 										))}
 									</div>
 								) : (
-									<div class="h-full flex items-center justify-center text-[11px] text-30">—</div>
+									<div class="h-full flex items-center justify-center text-[11px] text-white/60">—</div>
 								)}
 							</div>
 						);
