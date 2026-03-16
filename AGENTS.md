@@ -1,4 +1,4 @@
-﻿# Project Guidelines
+# Project Guidelines
 
 ## Code Style
 - 技术栈：Astro + TypeScript + Svelte，脚本层为 Node.js（`src/**`、`scripts/*.js`）。
@@ -27,6 +27,12 @@
 - 每次代码更改完成后，必须立即创建一次本地 Git 提交，禁止把多次无关改动合并。
 - 文章元数据遵循 `src/content/config.ts` 的 schema；不要绕过 schema 添加字段。
 - 涉及文章历史展示时，优先复用 `scripts/update-diff.js` + `src/json/git-history.json` 现有链路。
+
+## 近期排障感想
+- 当前工程以 Svelte 传统语法为主（`export let` + `$:`）；在未统一升级编译链前，不要混入 rune 语法（如 `$state`、`$derived`、`$props`、`<svelte:options runes>`）。
+- Svelte 模板表达式中避免写 TypeScript 断言（`as ...`）；事件值提取应放在 `<script lang="ts">` 的函数里处理。
+- `@iconify/svelte` 建议统一按包名导入，并通过 `astro.config.mjs` 的 Vite `resolve.alias` 精确映射到 `dist/Icon.svelte`，避免 `exports` 条件解析报错。
+- 看到 Astro `UnhandledRejection` 时，先定位其下方第一条构建错误；该提示通常是上游解析失败后的包装错误。
 
 ## Integration Points
 - 站点统计配置在 `src/config.ts`（Umami）。
