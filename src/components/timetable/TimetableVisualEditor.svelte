@@ -39,8 +39,7 @@ let isDirty = false;
 let creatingCourse = false;
 
 let dragStartIndex: number | null = null;
-let dragOverDay: number | null = null;
-let dragOverPosition: "before" | "after" | null = null;
+let dragOverIndex: number | null = null;
 
 type NewCourseDraft = {
 	courseName: string;
@@ -88,6 +87,17 @@ $: selectedCourseName = selectedArrangement
 			(course) => course.id === selectedArrangement?.id,
 		)?.courseName || ""
 	: "";
+$: existingCourseNames = [
+	...new Set(
+		draftParsed.courseDefinitions.map((c) => c.courseName).filter(Boolean),
+	),
+];
+$: existingTeachers = [
+	...new Set(draftParsed.arrangements.map((a) => a.teacher).filter(Boolean)),
+];
+$: existingRooms = [
+	...new Set(draftParsed.arrangements.map((a) => a.room).filter(Boolean)),
+];
 
 function parseBaselineText(text: string): ParsedTimetableData {
 	try {
@@ -351,87 +361,6 @@ function updateCourseName(value: string) {
 	afterDraftChange();
 }
 
-function handleDragStart(event: DragEvent, index: number) {
-	if (!event.dataTransfer) return;
-	event.dataTransfer.effectAllowed = "move";
-	event.dataTransfer.setData("text/plain", String(index));
-	dragStartIndex = index;
-}
-
-function handleDragOver(
-	event: DragEvent,
-	day: number,
-	position: "before" | "after",
-) {
-	event.preventDefault();
-	dragOverDay = day;
-	dragOverPosition = position;
-}
-
-function handleDragLeave() {
-	dragOverDay = null;
-	dragOverPosition = null;
-}
-
-function handleDrop(
-	event: DragEvent,
-	targetDay: number,
-	targetPosition: "before" | "after",
-) {
-	event.preventDefault();
-	const sourceIndex = dragStartIndex;
-	if (sourceIndex === null) {
-		dragStartIndex = null;
-		dragOverDay = null;
-		dragOverPosition = null;
-		return;
-	}
-
-	const sourceArrangement = draftParsed.arrangements[sourceIndex];
-	if (!sourceArrangement) {
-		dragStartIndex = null;
-		dragOverDay = null;
-		dragOverPosition = null;
-		return;
-	}
-
-	const targetDayItems = draftParsed.arrangements
-		.map((arr, idx) => ({ arr, idx }))
-		.filter(({ arr }) => arr.day === targetDay)
-		.sort((a, b) => a.arr.startNode - b.arr.startNode);
-
-	const targetIndex =
-		targetPosition === "before"
-			? (targetDayItems[0]?.idx ?? targetDay)
-			: (targetDayItems[targetDayItems.length - 1]?.idx ?? targetDay);
-
-	let insertIndex: number;
-	if (targetPosition === "before") {
-		insertIndex = targetIndex;
-	} else {
-		const sameDayItems = targetDayItems.filter(
-			(item) =>
-				item.idx < sourceIndex ||
-				(sourceIndex !== null && item.idx > targetIndex),
-		);
-		insertIndex = sameDayItems.length > 0 ? targetIndex : targetIndex + 1;
-	}
-
-	const [removed] = draftParsed.arrangements.splice(sourceIndex, 1);
-	draftParsed.arrangements.splice(insertIndex, 0, removed);
-
-	dragStartIndex = null;
-	dragOverDay = null;
-	dragOverPosition = null;
-	afterDraftChange();
-}
-
-function handleDragEnd() {
-	dragStartIndex = null;
-	dragOverDay = null;
-	dragOverPosition = null;
-}
-
 function afterDraftChange() {
 	validationError = validateDraft(draftParsed);
 	previewViewModel = buildTimetableViewModel(
@@ -593,23 +522,14 @@ function getEventValue(event: Event): string {
 								{#each dayGroup.items as item}
 									<button
 										type="button"
-										class="w-full rounded-lg border px-3 py-2 text-left transition cursor-move {selectedArrangementRef === item.arrangementIndex ? "border-[var(--primary)] bg-[var(--primary)]/15" : "border-[var(--line-divider)]/70 bg-[var(--card-bg)]/60 hover:border-[var(--primary)]/50"}"
-										draggable="true"
+										class={`w-full rounded-lg border px-3 py-2 text-left transition ${selectedArrangementRef === item.arrangementIndex ? "border-[var(--primary)] bg-[var(--primary)]/15" : "border-[var(--line-divider)]/70 bg-[var(--card-bg)]/60 hover:border-[var(--primary)]/50"}`}
 										on:click={() => selectArrangement(item.arrangementIndex)}
-										on:dragstart={(e) => handleDragStart(e, item.arrangementIndex)}
-										on:dragend={handleDragEnd}
 									>
 										<div class="mb-1 text-sm font-semibold" style={`color:${item.color}`}>{item.title}</div>
 										<div class="text-xs text-white/70">{item.nodeText} · {item.weekText}</div>
 										<div class="text-xs text-white/60">{item.teacher} / {item.room}</div>
 									</button>
 								{/each}
-								<div
-									class="min-h-[2rem] w-full rounded border border-dashed border-[var(--line-divider)]/50 transition-all {dragOverDay === dayGroup.day ? "border-[var(--primary)] bg-[var(--primary)]/10" : ""}"
-									on:dragover={(e) => handleDragOver(e, dayGroup.day, "after")}
-									on:dragleave={handleDragLeave}
-									on:drop={(e) => handleDrop(e, dayGroup.day, "after")}
-								></div>
 							</div>
 						{/if}
 					</div>
@@ -625,31 +545,49 @@ function getEventValue(event: Event): string {
 						<span class="mb-1 block">课程名</span>
 						<input
 							type="text"
+							list="course-name-list"
 							class="w-full rounded-lg border border-[var(--line-divider)] bg-[var(--card-bg)] px-3 py-2 text-sm"
 							value={newCourseDraft.courseName}
 							on:input={(event) =>
 								updateNewCourseDraft("courseName", getEventValue(event))}
 						/>
+						<datalist id="course-name-list">
+							{#each existingCourseNames as name}
+								<option value={name} />
+							{/each}
+						</datalist>
 					</label>
 
 					<label class="block text-xs text-white/80">
 						<span class="mb-1 block">教师</span>
 						<input
 							type="text"
+							list="teacher-list"
 							class="w-full rounded-lg border border-[var(--line-divider)] bg-[var(--card-bg)] px-3 py-2 text-sm"
 							value={newCourseDraft.teacher}
 							on:input={(event) => updateNewCourseDraft("teacher", getEventValue(event))}
 						/>
+						<datalist id="teacher-list">
+							{#each existingTeachers as teacher}
+								<option value={teacher} />
+							{/each}
+						</datalist>
 					</label>
 
 					<label class="block text-xs text-white/80">
 						<span class="mb-1 block">教室</span>
 						<input
 							type="text"
+							list="room-list"
 							class="w-full rounded-lg border border-[var(--line-divider)] bg-[var(--card-bg)] px-3 py-2 text-sm"
 							value={newCourseDraft.room}
 							on:input={(event) => updateNewCourseDraft("room", getEventValue(event))}
 						/>
+						<datalist id="room-list">
+							{#each existingRooms as room}
+								<option value={room} />
+							{/each}
+						</datalist>
 					</label>
 
 					<label class="block text-xs text-white/80">
