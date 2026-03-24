@@ -38,6 +38,9 @@ let validationError = "";
 let isDirty = false;
 let creatingCourse = false;
 
+let dragStartIndex: number | null = null;
+let dragOverIndex: number | null = null;
+
 type NewCourseDraft = {
 	courseName: string;
 	teacher: string;
@@ -347,6 +350,46 @@ function updateCourseName(value: string) {
 	afterDraftChange();
 }
 
+function handleDragStart(event: DragEvent, index: number) {
+	if (!event.dataTransfer) return;
+	event.dataTransfer.effectAllowed = "move";
+	event.dataTransfer.setData("text/plain", String(index));
+	dragStartIndex = index;
+}
+
+function handleDragOver(event: DragEvent, index: number) {
+	event.preventDefault();
+	if (!event.dataTransfer) return;
+	event.dataTransfer.dropEffect = "move";
+	dragOverIndex = index;
+}
+
+function handleDragLeave() {
+	dragOverIndex = null;
+}
+
+function handleDrop(event: DragEvent, targetIndex: number) {
+	event.preventDefault();
+	const sourceIndex = dragStartIndex;
+	if (sourceIndex === null || sourceIndex === targetIndex) {
+		dragStartIndex = null;
+		dragOverIndex = null;
+		return;
+	}
+
+	const [removed] = draftParsed.arrangements.splice(sourceIndex, 1);
+	draftParsed.arrangements.splice(targetIndex, 0, removed);
+
+	dragStartIndex = null;
+	dragOverIndex = null;
+	afterDraftChange();
+}
+
+function handleDragEnd() {
+	dragStartIndex = null;
+	dragOverIndex = null;
+}
+
 function afterDraftChange() {
 	validationError = validateDraft(draftParsed);
 	previewViewModel = buildTimetableViewModel(
@@ -505,11 +548,17 @@ function getEventValue(event: Event): string {
 							<p class="text-xs text-white/70">本日暂无课程</p>
 						{:else}
 							<div class="flex flex-col gap-2">
-								{#each dayGroup.items as item}
+								{#each dayGroup.items as item, itemIndex}
 									<button
 										type="button"
-										class={`w-full rounded-lg border px-3 py-2 text-left transition ${selectedArrangementRef === item.arrangementIndex ? "border-[var(--primary)] bg-[var(--primary)]/15" : "border-[var(--line-divider)]/70 bg-[var(--card-bg)]/60 hover:border-[var(--primary)]/50"}`}
+										class={`w-full rounded-lg border px-3 py-2 text-left transition cursor-move ${selectedArrangementRef === item.arrangementIndex ? "border-[var(--primary)] bg-[var(--primary)]/15" : "border-[var(--line-divider)]/70 bg-[var(--card-bg)]/60 hover:border-[var(--primary)]/50"} ${dragOverIndex === item.arrangementIndex ? "border-t-2 border-t-[var(--primary)]" : ""}`}
+										draggable="true"
 										on:click={() => selectArrangement(item.arrangementIndex)}
+										on:dragstart={(e) => handleDragStart(e, item.arrangementIndex)}
+										on:dragover={(e) => handleDragOver(e, item.arrangementIndex)}
+										on:dragleave={handleDragLeave}
+										on:drop={(e) => handleDrop(e, item.arrangementIndex)}
+										on:dragend={handleDragEnd}
 									>
 										<div class="mb-1 text-sm font-semibold" style={`color:${item.color}`}>{item.title}</div>
 										<div class="text-xs text-white/70">{item.nodeText} · {item.weekText}</div>
