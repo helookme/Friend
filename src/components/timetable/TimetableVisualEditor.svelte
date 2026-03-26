@@ -38,6 +38,9 @@ let validationError = "";
 let isDirty = false;
 let creatingCourse = false;
 
+let dragStartIndex: number | null = null;
+let dragOverIndex: number | null = null;
+
 type NewCourseDraft = {
 	courseName: string;
 	teacher: string;
@@ -84,6 +87,17 @@ $: selectedCourseName = selectedArrangement
 			(course) => course.id === selectedArrangement?.id,
 		)?.courseName || ""
 	: "";
+$: existingCourseNames = [
+	...new Set(
+		draftParsed.courseDefinitions.map((c) => c.courseName).filter(Boolean),
+	),
+];
+$: existingTeachers = [
+	...new Set(draftParsed.arrangements.map((a) => a.teacher).filter(Boolean)),
+];
+$: existingRooms = [
+	...new Set(draftParsed.arrangements.map((a) => a.room).filter(Boolean)),
+];
 
 function parseBaselineText(text: string): ParsedTimetableData {
 	try {
@@ -323,6 +337,16 @@ function updateSelectedArrangement(
 	afterDraftChange();
 }
 
+function deleteSelectedArrangement() {
+	if (selectedArrangementRef === null) {
+		return;
+	}
+
+	draftParsed.arrangements.splice(selectedArrangementRef, 1);
+	selectedArrangementRef = null;
+	afterDraftChange();
+}
+
 function updateCourseName(value: string) {
 	if (!selectedArrangement) {
 		return;
@@ -521,31 +545,49 @@ function getEventValue(event: Event): string {
 						<span class="mb-1 block">课程名</span>
 						<input
 							type="text"
+							list="course-name-list"
 							class="w-full rounded-lg border border-[var(--line-divider)] bg-[var(--card-bg)] px-3 py-2 text-sm"
 							value={newCourseDraft.courseName}
 							on:input={(event) =>
 								updateNewCourseDraft("courseName", getEventValue(event))}
 						/>
+						<datalist id="course-name-list">
+							{#each existingCourseNames as name}
+								<option value={name} />
+							{/each}
+						</datalist>
 					</label>
 
 					<label class="block text-xs text-white/80">
 						<span class="mb-1 block">教师</span>
 						<input
 							type="text"
+							list="teacher-list"
 							class="w-full rounded-lg border border-[var(--line-divider)] bg-[var(--card-bg)] px-3 py-2 text-sm"
 							value={newCourseDraft.teacher}
 							on:input={(event) => updateNewCourseDraft("teacher", getEventValue(event))}
 						/>
+						<datalist id="teacher-list">
+							{#each existingTeachers as teacher}
+								<option value={teacher} />
+							{/each}
+						</datalist>
 					</label>
 
 					<label class="block text-xs text-white/80">
 						<span class="mb-1 block">教室</span>
 						<input
 							type="text"
+							list="room-list"
 							class="w-full rounded-lg border border-[var(--line-divider)] bg-[var(--card-bg)] px-3 py-2 text-sm"
 							value={newCourseDraft.room}
 							on:input={(event) => updateNewCourseDraft("room", getEventValue(event))}
 						/>
+						<datalist id="room-list">
+							{#each existingRooms as room}
+								<option value={room} />
+							{/each}
+						</datalist>
 					</label>
 
 					<label class="block text-xs text-white/80">
@@ -703,6 +745,16 @@ function getEventValue(event: Event): string {
 									updateSelectedArrangement("endWeek", getEventValue(event))}
 							/>
 						</label>
+					</div>
+
+					<div class="flex items-center gap-2 pt-1">
+						<button
+							type="button"
+							class="btn-regular rounded-lg px-3 py-2 text-sm font-medium text-red-300 hover:bg-red-500/20"
+							on:click={deleteSelectedArrangement}
+						>
+							删除课程
+						</button>
 					</div>
 				</div>
 			{:else}
